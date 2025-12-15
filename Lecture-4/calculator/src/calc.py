@@ -1,4 +1,5 @@
 import flet as ft
+import math
 
 
 class CalcButton(ft.ElevatedButton):
@@ -30,7 +31,8 @@ class ExtraActionButton(CalcButton):
         self.bgcolor = ft.Colors.BLUE_GREY_100
         self.color = ft.Colors.BLACK
 
-
+#　電卓のボタンを押したときの動作を定義するCalculatorAppクラス
+#　通常の四則演算に加えて、sin, cos, tan, log, √ の機能を追加
 class CalculatorApp(ft.Container):
     # application's root control (i.e. "view") containing all other controls
     def __init__(self):
@@ -55,6 +57,7 @@ class CalculatorApp(ft.Container):
                         ),
                         ExtraActionButton(text="%", button_clicked=self.button_clicked),
                         ActionButton(text="/", button_clicked=self.button_clicked),
+                        ActionButton(text="sin", button_clicked=self.button_clicked),
                     ]
                 ),
                 ft.Row(
@@ -63,6 +66,7 @@ class CalculatorApp(ft.Container):
                         DigitButton(text="8", button_clicked=self.button_clicked),
                         DigitButton(text="9", button_clicked=self.button_clicked),
                         ActionButton(text="*", button_clicked=self.button_clicked),
+                        ActionButton(text="cos", button_clicked=self.button_clicked),
                     ]
                 ),
                 ft.Row(
@@ -71,6 +75,7 @@ class CalculatorApp(ft.Container):
                         DigitButton(text="5", button_clicked=self.button_clicked),
                         DigitButton(text="6", button_clicked=self.button_clicked),
                         ActionButton(text="-", button_clicked=self.button_clicked),
+                        ActionButton(text="tan", button_clicked=self.button_clicked),
                     ]
                 ),
                 ft.Row(
@@ -79,6 +84,7 @@ class CalculatorApp(ft.Container):
                         DigitButton(text="2", button_clicked=self.button_clicked),
                         DigitButton(text="3", button_clicked=self.button_clicked),
                         ActionButton(text="+", button_clicked=self.button_clicked),
+                        ActionButton(text="log", button_clicked=self.button_clicked),
                     ]
                 ),
                 ft.Row(
@@ -87,6 +93,7 @@ class CalculatorApp(ft.Container):
                             text="0", expand=2, button_clicked=self.button_clicked
                         ),
                         DigitButton(text=".", button_clicked=self.button_clicked),
+                        ActionButton(text="√", button_clicked=self.button_clicked),
                         ActionButton(text="=", button_clicked=self.button_clicked),
                     ]
                 ),
@@ -134,8 +141,38 @@ class CalculatorApp(ft.Container):
 
             elif float(self.result.value) < 0:
                 self.result.value = str(
-                    self.format_number(abs(float(self.result.value)))
+                    self.format_number(abs(float(self.result.value))))
+
+        # sin, cos, tan, log, √ の機能をそれぞれ追加
+        elif data == "sin":
+            self.result.value = self.format_number(math.sin(float(self.result.value)))
+            self.reset()
+
+        elif data == "cos":
+            self.result.value = self.format_number(math.cos(float(self.result.value)))
+            self.reset()
+
+        elif data == "tan":
+            self.result.value = self.format_number(math.tan(float(self.result.value)))
+            self.reset()
+
+        elif data == "log":
+            if float(self.result.value) <= 0:
+                self.result.value = "Error"
+            else:
+                self.result.value = self.format_number(
+                    math.log10(float(self.result.value))
                 )
+            self.reset()
+
+        elif data == "√":
+            if float(self.result.value) < 0:
+                self.result.value = "Error"
+            else:
+                self.result.value = self.format_number(
+                    math.sqrt(float(self.result.value))
+                )
+            self.reset()                        
 
         self.update()
 
